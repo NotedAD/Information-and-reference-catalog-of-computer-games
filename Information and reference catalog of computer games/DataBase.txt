@@ -1,0 +1,72 @@
+﻿CREATE DATABASE application_game_guide;
+use application_game_guide;
+
+CREATE TABLE `account` (
+  `id_account` int NOT NULL,
+  `login` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT ' ',
+  `password` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT ' ',
+  `age` int NOT NULL DEFAULT '0',
+  `balance` float NOT NULL DEFAULT '0',
+  `image` mediumblob
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `buy_games` (
+  `id_buy_games` int NOT NULL,
+  `id_games` int NOT NULL,
+  `id_account` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `games` (
+  `id_games` int NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `date_release` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `price` float NOT NULL DEFAULT '0',
+  `country` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `image` mediumblob,
+  `age_limit` int NOT NULL DEFAULT '0',
+  `preorder` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `NEWS` (
+  `id_news` int NOT NULL,
+  `title` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `sub_title` varchar(600) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `image` mediumblob,
+  `date_news` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+ALTER TABLE `account`
+  ADD PRIMARY KEY (`id_account`),
+  ADD UNIQUE KEY `login` (`login`);
+
+ALTER TABLE `buy_games`
+  ADD PRIMARY KEY (`id_buy_games`),
+  ADD KEY `id_games` (`id_games`),
+  ADD KEY `id_account` (`id_account`);
+
+ALTER TABLE `games`
+  ADD PRIMARY KEY (`id_games`),
+  ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `NEWS`
+  ADD PRIMARY KEY (`id_news`);
+
+
+ALTER TABLE `account`
+  MODIFY `id_account` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `buy_games`
+  MODIFY `id_buy_games` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `games`
+  MODIFY `id_games` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `NEWS`
+  MODIFY `id_news` int NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `buy_games`
+  ADD CONSTRAINT `buy_games_ibfk_1` FOREIGN KEY (`id_games`) REFERENCES `games` (`id_games`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `buy_games_ibfk_2` FOREIGN KEY (`id_account`) REFERENCES `account` (`id_account`) ON DELETE CASCADE ON UPDATE CASCADE;
